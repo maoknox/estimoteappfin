@@ -627,7 +627,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 .portfolio {
   /*background-color: #edf6ff;*/
   padding-bottom: 0;
-  height: 85%;
+  height: 80%;
   overflow-x: hidden;
 }
 
@@ -943,6 +943,12 @@ body.mobile-nav-active #mobile-nav-toggle {
 @media (max-width: 640px) {
     .portfolio {
         height: 89%; 
+    }
+}
+
+@media (max-height: 480px) {
+    .portfolio {
+        height: 86%; 
     }
 }
 @media (max-width: 61.9em) {

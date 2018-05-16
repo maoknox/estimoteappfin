@@ -32,7 +32,7 @@
         </div>
         <div id="divEstIndex">
             <audio id="myAudio" >
-              <source src="<?php echo Yii::app()->request->baseUrl; ?>/media/audio.aac" controls>
+              <source src="<?php echo Yii::app()->request->baseUrl; ?>/media/indigena_museo.wav" controls>
               <!--<source src="horse.mp3" type="audio/mpeg">-->
               <p>Tu navegador no implementa el elemento audio</p>
             </audio>
