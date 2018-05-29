@@ -37,7 +37,113 @@
 
   <!-- Main Stylesheet File -->
   <link href="css/style.css" rel="stylesheet">
-
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+<link rel="stylesheet" type="text/css" href="css/theme-2.css" />
+<script src="js/jquery.js"></script>
+<script src="js/jquery.audioControls.min.js"></script>
+<script type="text/javascript">
+		$(document).ready(function(e){
+			$("#playListContainer").audioControls({
+				autoPlay : false,
+				timer: 'increment',
+				onAudioChange : function(response){
+					$('.songPlay').text(response.title + ' ...');
+				},
+				onVolumeChange : function(vol){
+					var obj = $('.volume');
+					if(vol <= 0){
+						obj.attr('class','volume mute');
+					} else if(vol <= 33){
+						obj.attr('class','volume volume1');
+					} else if(vol > 33 && vol <= 66){
+						obj.attr('class','volume volume2');
+					} else if(vol > 66){
+						obj.attr('class','volume volume3');
+					} else {
+						obj.attr('class','volume volume1');
+					}
+				}
+			});
+			var play=0;
+			var pause=0;
+			$("#play").on("click",function(){
+				$("#play").removeClass("play");
+				$("#play").addClass("playClick");
+				$("#pause").removeClass("pauseClick");
+				$("#pause").addClass("pause");
+				audioGlobal._audio.volume=$("#inivol").text();
+				audioGlobal._audio.play();
+			});
+			$("#pause").on("click",function(){
+				$("#pause").removeClass("pause");
+				$("#pause").addClass("pauseClick");
+				$("#play").removeClass("playClick");
+				$("#play").addClass("play");
+				audioGlobal._audio.pause();
+			});
+			$.confirm({
+				title: 'Confirma!',
+				content: 'Este página quiere reproducir un sonido, está de acuerdo en reproducirlo?',
+				buttons: {
+					aceptar: function () {
+						audioGlobal._audio.play();
+						audioGlobal._audio.volume=$("#inivol").text();
+						$("#play").removeClass("play");
+						$("#play").addClass("playClick");
+						$("#play").removeAttr("data-attr");
+					},
+					cancelar: function () {
+						return;
+					}
+				}
+			});
+			$("#volumemin").on("click",function(){
+				var vol=parseFloat($("#inivol").text());
+				vol=vol-0.1;
+				if(vol==parseFloat("0.0")){
+					$("#volumez").addClass("volumemute");
+					$("#volumez").removeClass("volumez");
+					audioGlobal._audio.volume=0.0;
+					$("#inivol").text("0.0");
+				}
+				else if(vol>parseFloat("0.0")){
+					audioGlobal._audio.volume=vol;
+					$("#inivol").text(vol.toFixed(1));
+				}
+				
+			});
+			$("#volumez").on("click",function(){
+				var nameClass=$("#volumez").attr("class");
+				if(nameClass=="volumez"){
+					$("#volumez").addClass("volumemute");
+					$("#volumez").removeClass("volumez");
+					audioGlobal._audio.volume=0.0;
+				}
+				else{
+					$("#volumez").addClass("volumez");
+					$("#volumez").removeClass("volumemute");
+					audioGlobal._audio.volume=parseFloat($("#inivol").text());;
+				}
+			});
+			$("#volumemax").on("click",function(){
+				var vol=parseFloat($("#inivol").text());
+				console.log(audioGlobal._audio.volume);
+				vol=vol+0.1;
+				if(vol==parseFloat("0.0") || audioGlobal._audio.volume==parseFloat("0.0")){
+					$("#volumez").addClass("volumez");
+					$("#volumez").removeClass("volumemute");
+					audioGlobal._audio.volume=vol;
+					$("#inivol").text(vol.toFixed(1));
+				}
+				else if(vol<=parseFloat("1.0")){
+					audioGlobal._audio.volume=vol;
+					$("#inivol").text(vol.toFixed(1));
+				}
+				
+			});
+		});
+		
+	</script>
   <!-- =======================================================
     Theme Name: Bell
     Theme URL: https://bootstrapmade.com/bell-free-bootstrap-4-template/
@@ -118,14 +224,70 @@
                 </div>
             </div>
         </div>
-        <div id="divEstIndex">
-            <audio id="myAudio" >
-              <source src="media/indigena_museo.wav" controls>
-              <!--<source src="horse.mp3" type="audio/mpeg">-->
-              <p>Tu navegador no implementa el elemento audio</p>
-            </audio>
-        </div>
-  </div></div><!-- content -->
+        <div class="mainContainer">
+			<div class="containerPlayer">
+				<div id="listContainer" class="playlistContainer" style="display:none">
+					<ul id="playListContainer">
+						<li data-src="media/indigena_museo.wav">
+							<a href="#">
+								La muerte Muisca
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div id="playerContainer">
+					
+					<div style="padding-bottom:30px">
+						<ul class="controls" style="padding-left:30px;">
+									<li>
+									<a href="#" class="volumez" id="volumez"></a>
+									</li>
+									<li>
+									<a href="#" class="volumemin" id="volumemin"></a>
+									</li>
+									<li>
+									<a href="#" class="volumemax" id="volumemax"></a>
+									</li>
+						</ul>
+						<div id="inivol" style="display:none">0.5</div>
+						<br>
+						
+					</div>		
+					<div id="controlContainer">
+						
+						<div class="progress">
+							<div data-attr="seekableTrack" class="seekableTrack"></div>
+							<div class="updateProgress"></div>
+						</div>
+						<div class="audioDetails">
+							<span class="songPlay"></span>
+							<span data-attr="timer" class="audioTime"></span>
+						</div>
+						<div class="controlsDiv" style="margin:0 auto;">
+							<ul class="controls">
+								<li>
+								<a href="#" class="left" data-attr="prevAudio"></a>
+								</li>
+								<li>
+								<a href="#" class="play" id="play"></a>
+								</li>
+								<li>
+								<a href="#" class="pause" id="pause"></a>
+								</li>
+								<li>
+								<a href="#" class="right" data-attr="nextAudio"></a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+  </div>
+  </div>
+	
+  <!-- content -->
   </section>
 
   <footer class="site-footer">
@@ -144,26 +306,8 @@
   <a class="scrolltop" href="#"><span class="fa fa-angle-up"></span></a>
 
 
-  <!-- Required JavaScript Libraries -->
-  <script src="lib/jquery/jquery.min.js"></script>
-  <script src="lib/jquery/jquery-migrate.min.js"></script>
-  <script src="lib/superfish/hoverIntent.js"></script>
-  <script src="lib/superfish/superfish.min.js"></script>
-  <script src="lib/tether/js/tether.min.js"></script>
-  <script src="lib/stellar/stellar.min.js"></script>
-  <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="lib/counterup/counterup.min.js"></script>
-  <script src="lib/waypoints/waypoints.min.js"></script>
-  <script src="lib/easing/easing.js"></script>
-  <script src="lib/stickyjs/sticky.js"></script>
-  <script src="lib/parallax/parallax.js"></script>
-  <script src="lib/lockfixed/lockfixed.min.js"></script>
-
-  <!-- Template Specisifc Custom Javascript File -->
-  <script src="/estimoteappfin/js/custom.js"></script>
 
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
-<script type="text/javascript" src="js/Est.js"></script>
 </body>
 </html>
